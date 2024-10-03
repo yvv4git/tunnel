@@ -2,6 +2,7 @@ package application
 
 import (
 	"context"
+	"log/slog"
 
 	"github.com/yvv4git/tunnel/internal/infrastructure"
 )
@@ -11,10 +12,16 @@ type Client struct {
 	cfg infrastructure.Config
 }
 
-func NewClient(cfg infrastructure.Config) *Client {
-	return &Client{
+func NewClient(log *slog.Logger, cfg infrastructure.Config) *Client {
+	c := &Client{
+		application: application{
+			log: log,
+		},
 		cfg: cfg,
 	}
+
+	c.app = c
+	return c
 }
 
 func (c *Client) start(ctx context.Context) error {

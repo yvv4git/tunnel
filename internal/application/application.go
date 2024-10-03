@@ -21,6 +21,14 @@ func (a *application) Start() error {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
+	if a.log == nil {
+		return ErrNoLoggerProvided
+	}
+
+	if a.app == nil {
+		return ErrNoApplicationProvided
+	}
+
 	go func() {
 		quit := make(chan os.Signal, 1)
 		signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
