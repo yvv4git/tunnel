@@ -8,6 +8,7 @@ import (
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+	"github.com/yvv4git/tunnel/internal/application"
 	"github.com/yvv4git/tunnel/internal/infrastructure"
 )
 
@@ -29,13 +30,15 @@ The client command will load the configuration and start the client, allowing it
 		log := infrastructure.NewDefaultLogger()
 
 		var config infrastructure.Config
-		err := viper.Unmarshal(&config)
-		if err != nil {
+		if err := viper.Unmarshal(&config); err != nil {
 			log.Error("unmarshalling config", slog.Any("error", err))
 			return
 		}
 
-		log.Info("config loaded", slog.Any("config", config))
+		app := application.NewClient(log, config)
+		if err := app.Start(); err != nil {
+			log.Error("start client application", slog.Any("error", err))
+		}
 	},
 }
 
