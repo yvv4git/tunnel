@@ -1,7 +1,0 @@
-[Server]
-Host = "0.0.0.0"
-Port = 8080
-
-[Client]
-ServerHost = "127.0.0.1"
-ServerPort = 9090
