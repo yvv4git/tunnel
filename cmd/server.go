@@ -4,8 +4,7 @@ Copyright © 2024 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"fmt"
-	"log"
+	"log/slog"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -26,16 +25,16 @@ Example usage:
 
 The server command will load the configuration and start the server, making the application available for incoming requests.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("server called")
+		log := infrastructure.NewDefaultLogger()
 
 		var config infrastructure.Config
 		err := viper.Unmarshal(&config)
 		if err != nil {
-			log.Fatal(err)
+			log.Error("unmarshalling config", slog.Any("error", err))
 			return
 		}
 
-		log.Println(config)
+		log.Info("config loaded", slog.Any("config", config))
 	},
 }
 
