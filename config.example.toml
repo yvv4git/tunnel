@@ -1,7 +1,15 @@
 [Server]
-Host = "0.0.0.0"
+Host = "192.168.1.1"
 Port = 8080
 
+  [Server.DeviceTUNAddress]
+  Host = "10.0.0.1"
+  Route = "10.0.0.0/24"
+
 [Client]
-ServerHost = "127.0.0.1"
-ServerPort = 9090
+ServerHost = "192.168.1.2"
+ServerPort = 8080
+
+  [Client.DeviceTUNAddress]
+  Host = "10.0.0.2"
+  Route = "10.0.0.0/24"
