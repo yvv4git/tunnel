@@ -6,12 +6,16 @@ import (
 )
 
 const (
-	TCPServer = iota
-	TCPClient
+	tcpProtocol = "tcp"
 )
 
 func NewServerTCPListener(cfg Config) (net.Listener, error) {
-	listener, err := net.Listen("tcp", "0.0.0.0:12345") // TODO: make this configurable
+	addr, err := createAddrString(cfg.Server.Host, cfg.Server.Port)
+	if err != nil {
+		return nil, fmt.Errorf("create server TCP address: %w", err)
+	}
+
+	listener, err := net.Listen(tcpProtocol, addr)
 	if err != nil {
 		return nil, fmt.Errorf("create server TCP listener: %w", err)
 	}
@@ -20,10 +24,27 @@ func NewServerTCPListener(cfg Config) (net.Listener, error) {
 }
 
 func NewClientTCPConnection(cfg Config) (net.Conn, error) {
-	conn, err := net.Dial("tcp", "server:12345") // TODO: make this configurable
+	addr, err := createAddrString(cfg.Client.ServerHost, cfg.Client.ServerPort)
+	if err != nil {
+		return nil, fmt.Errorf("create client TCP address: %w", err)
+	}
+
+	conn, err := net.Dial(tcpProtocol, addr)
 	if err != nil {
 		return nil, fmt.Errorf("create client TCP connection: %w", err)
 	}
 
 	return conn, nil
+}
+
+func createAddrString(host string, port uint16) (string, error) {
+	if host == "" {
+		return "", ErrInvalidHost
+	}
+
+	if port == 0 {
+		return "", ErrInvalidPort
+	}
+
+	return fmt.Sprintf("%s:%d", host, port), nil
 }

@@ -8,11 +8,11 @@ type (
 
 	Server struct {
 		Host string `mapstructure:"Host"`
-		Port int    `mapstructure:"Port"`
+		Port uint16 `mapstructure:"Port"`
 	}
 
 	Client struct {
 		ServerHost string `mapstructure:"ServerHost"`
-		ServerPort int    `mapstructure:"ServerPort"`
+		ServerPort uint16 `mapstructure:"ServerPort"`
 	}
 )
