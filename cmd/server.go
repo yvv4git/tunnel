@@ -6,6 +6,7 @@ package cmd
 import (
 	"log/slog"
 
+	"github.com/davecgh/go-spew/spew"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"github.com/yvv4git/tunnel/internal/application"
@@ -34,6 +35,7 @@ The server command will load the configuration and start the server, making the 
 			return
 		}
 
+		spew.Dump(config)
 		app := application.NewServer(log, config)
 		if err := app.Start(); err != nil {
 			log.Error("starting server application", slog.Any("error", err))
