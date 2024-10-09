@@ -8,7 +8,7 @@ services:
     networks:
       - tun-network
     ports:
-      - "1234:1234"  # Открываем порт 12345 на хост-машине. Это не обязательно!
+      - "1234:1234"
     cap_add:
       - NET_ADMIN
     devices:
