@@ -43,17 +43,13 @@ func (s *Server) start(ctx context.Context) error {
 	}
 	defer tunDevice.Close()
 
-	listener, err := infrastructure.NewServerTCPListener(s.cfg)
-	if err != nil {
-		return fmt.Errorf("create server TCP listener: %w", err)
-	}
-	defer listener.Close()
+	serverTCP := infrastructure.NewServerTCP(s.cfg.Server, tunDevice)
+	defer serverTCP.Close()
 
-	svc := service.NewServer(s.cfg.Server, tunDevice, listener)
-	if err := svc.Start(ctx); err != nil {
+	svc := service.NewServer(serverTCP)
+	if err := svc.Processing(ctx); err != nil {
 		return fmt.Errorf("start server: %w", err)
 	}
-	// defer svc.Close()
 
 	return nil
 }
