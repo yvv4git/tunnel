@@ -36,6 +36,10 @@ func (s *Server) Start(ctx context.Context) error {
 				close(connChan)
 				return
 			}
+
+			// TODO: Use logger
+			fmt.Printf("Client connected: %s\n", conn.RemoteAddr().String())
+
 			connChan <- conn
 		}
 	}()

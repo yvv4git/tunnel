@@ -8,4 +8,4 @@ COPY . .
 
 RUN go build -o tunnel main.go
 
-CMD ["./run.sh"]
+CMD ["./tunnel"]

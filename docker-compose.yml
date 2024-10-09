@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  server:
+    image: yvv4git/tunnel-macos
+    container_name: server
+    hostname: server
+    networks:
+      - tun-network
+    ports:
+      - "1234:1234"  # Открываем порт 12345 на хост-машине. Это не обязательно!
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun
+    volumes:
+      - ./config.toml:/app/config.toml  
+    entrypoint: ./tunnel server
+
+  client:
+    image: yvv4git/tunnel-macos
+    container_name: client
+    hostname: client
+    networks:
+      - tun-network
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun
+    depends_on:
+      - server
+    volumes:
+      - ./config.toml:/app/config.toml  
+    entrypoint: ./tunnel client
+
+networks:
+  tun-network:
+    driver: bridge

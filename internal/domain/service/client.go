@@ -13,24 +13,23 @@ import (
 type Client struct {
 	cfg       infrastructure.Client
 	tunDevice *water.Interface
-	listener  net.Listener
 	conn      net.Conn
 }
 
-func NewClient(cfg infrastructure.Client, tunDevice *water.Interface, listener net.Listener) *Client {
+func NewClient(cfg infrastructure.Client, tunDevice *water.Interface, conn net.Conn) *Client {
 	return &Client{
 		cfg:       cfg,
 		tunDevice: tunDevice,
-		listener:  listener,
+		conn:      conn,
 	}
 }
 
 func (c *Client) Start(ctx context.Context) error {
 	go c.tunToTCP(ctx)
-
 	go c.tcpToTun(ctx)
 
-	return nil
+	<-ctx.Done()
+	return ctx.Err()
 }
 
 func (c *Client) tunToTCP(ctx context.Context) {
@@ -88,10 +87,6 @@ func (c *Client) tcpToTun(ctx context.Context) {
 func (c *Client) Close() error {
 	if err := c.tunDevice.Close(); err != nil {
 		return fmt.Errorf("close tun device: %w", err)
-	}
-
-	if err := c.listener.Close(); err != nil {
-		return fmt.Errorf("close listener: %w", err)
 	}
 
 	if c.conn != nil {
