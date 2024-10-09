@@ -2,8 +2,10 @@ package application
 
 import (
 	"context"
+	"fmt"
 	"log/slog"
 
+	"github.com/yvv4git/tunnel/internal/domain/service"
 	"github.com/yvv4git/tunnel/internal/infrastructure"
 )
 
@@ -25,10 +27,33 @@ func NewServer(log *slog.Logger, cfg infrastructure.Config) *Server {
 }
 
 func (s *Server) start(ctx context.Context) error {
-	s.log.Info("Starting ServerApplication")
-	defer s.log.Info("Shutting down ServerApplication")
+	s.log.Info("Starting server application")
+	defer s.log.Info("Shutting down server application")
 
-	// TODO: Implement server application logic
+	tunDeviceBuilder, err := infrastructure.NewDeviceTUNServerBuilder(s.cfg)
+	if err != nil {
+		return fmt.Errorf("create TUN device builder: %w", err)
+	}
+
+	tunDeviceCfg := s.cfg.Server.DeviceTUN
+	currentPlatform := infrastructure.Platform(tunDeviceCfg.Platform)
+	tunDevice, err := tunDeviceBuilder.Build(currentPlatform)
+	if err != nil {
+		return fmt.Errorf("build TUN device: %w", err)
+	}
+	defer tunDevice.Close()
+
+	listener, err := infrastructure.NewServerTCPListener(s.cfg)
+	if err != nil {
+		return fmt.Errorf("create server TCP listener: %w", err)
+	}
+	defer listener.Close()
+
+	svc := service.NewServer(s.cfg.Server, tunDevice, listener)
+	if err := svc.Start(ctx); err != nil {
+		return fmt.Errorf("start server: %w", err)
+	}
+	// defer svc.Close()
 
 	return nil
 }

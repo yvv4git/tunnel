@@ -2,6 +2,7 @@ package application
 
 import (
 	"context"
+	"errors"
 	"log/slog"
 	"os"
 	"os/signal"
@@ -39,6 +40,10 @@ func (a *application) Start() error {
 	}()
 
 	if err := a.app.start(ctx); err != nil {
+		if errors.Is(err, context.Canceled) {
+			a.log.Info("application was canceled by graceful shutdown")
+			return nil
+		}
 		return err
 	}
 
