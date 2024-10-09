@@ -6,10 +6,13 @@ package cmd
 import (
 	"fmt"
 	"log"
+	"log/slog"
 	"os"
 
+	"github.com/davecgh/go-spew/spew"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+	"github.com/yvv4git/tunnel/internal/infrastructure"
 )
 
 // rootCmd represents the root command
@@ -25,7 +28,15 @@ Example usage:
 
 This command does not perform any additional actions beyond loading the configuration.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("Configuration loaded")
+		log := infrastructure.NewDefaultLogger()
+
+		var config infrastructure.Config
+		if err := viper.Unmarshal(&config); err != nil {
+			log.Error("unmarshalling config", slog.Any("error", err))
+			return
+		}
+
+		spew.Dump(config)
 	},
 }
 

@@ -36,7 +36,7 @@ func (t *DeviceTUNServerBuilder) Build(platform Platform) (*water.Interface, err
 		return t.iface, nil
 	}
 
-	return t.iface, nil
+	return t.iface, ErrInvalidPlatform
 }
 
 func (t *DeviceTUNServerBuilder) configureServerForLinux() error {

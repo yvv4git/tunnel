@@ -1,15 +1,19 @@
 [Server]
-Host = "192.168.1.1"
-Port = 8080
+Host = "0.0.0.0"
+Port = 1234
+BufferSize = 1500 
 
-  [Server.DeviceTUNAddress]
-  Host = "10.0.0.1"
-  Route = "10.0.0.0/24"
+[Server.DeviceTUN]  
+Host = "10.0.0.1"
+Route = "10.0.0.0/24"
+Platform = "linux"
 
 [Client]
-ServerHost = "192.168.1.2"
-ServerPort = 8080
+ServerHost = "server"
+ServerPort = 1234
+BufferSize = 1500  
 
-  [Client.DeviceTUNAddress]
-  Host = "10.0.0.2"
-  Route = "10.0.0.0/24"
+[Client.DeviceTUN]  
+Host = "10.0.0.2"
+Route = "10.0.0.0/24"
+Platform = "linux"
