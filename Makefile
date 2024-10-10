@@ -10,7 +10,7 @@ run_server_macos:
 
 
 compose_up:
-	docker compose up --build
+	docker compose up
 
 compose_down:
 	docker compose down
