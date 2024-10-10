@@ -2,7 +2,11 @@ package infrastructure
 
 import (
 	"context"
+	"crypto/tls"
+	"crypto/x509"
 	"fmt"
+	"io/ioutil"
+	"log"
 	"net"
 
 	"github.com/songgao/water"
@@ -21,17 +25,69 @@ func NewServerTCP(cfg Server, tunDevice *water.Interface) *ServerTCP {
 	}
 }
 
-func (s *ServerTCP) Start(ctx context.Context) error {
-	addr, err := createAddrString(s.cfg.Host, s.cfg.Port)
+func (s *ServerTCP) setupListener() error {
+	serverCfg := s.cfg.TCPConfig
+	addr, err := createAddrString(serverCfg.Host, serverCfg.Port)
 	if err != nil {
 		return fmt.Errorf("create server TCP address: %w", err)
+	}
+
+	if serverCfg.Encryption.Enabled {
+		encCfg := serverCfg.Encryption
+		cer, err := tls.LoadX509KeyPair(encCfg.ServerCert, encCfg.ServerKey)
+		if err != nil {
+			log.Fatalf("Failed to load server certificates: %v", err)
+		}
+
+		clientCAs, err := loadClientCA(encCfg.CACert)
+		if err != nil {
+			return fmt.Errorf("load client CA: %w", err)
+		}
+
+		config := &tls.Config{
+			Certificates: []tls.Certificate{cer},
+			ClientAuth:   tls.RequireAndVerifyClientCert,
+			ClientCAs:    clientCAs,
+		}
+
+		listener, err := tls.Listen(tcpProtocol, addr, config)
+		if err != nil {
+			return fmt.Errorf("create server TLS listener: %w", err)
+		}
+
+		s.listener = listener
+
+		return nil
 	}
 
 	listener, err := net.Listen(tcpProtocol, addr)
 	if err != nil {
 		return fmt.Errorf("create server TCP listener: %w", err)
 	}
+
 	s.listener = listener
+
+	return nil
+}
+
+func loadClientCA(caFile string) (*x509.CertPool, error) {
+	caCert, err := ioutil.ReadFile(caFile)
+	if err != nil {
+		return nil, fmt.Errorf("read CA certificate: %w", err)
+	}
+
+	caCertPool := x509.NewCertPool()
+	if !caCertPool.AppendCertsFromPEM(caCert) {
+		return nil, fmt.Errorf("append CA certificate: %v", err)
+	}
+
+	return caCertPool, nil
+}
+
+func (s *ServerTCP) Start(ctx context.Context) error {
+	if err := s.setupListener(); err != nil {
+		return fmt.Errorf("create server TCP listener: %w", err)
+	}
 
 	connChan := make(chan net.Conn)
 
@@ -73,7 +129,7 @@ func (s *ServerTCP) handleConnection(ctx context.Context, conn net.Conn) {
 	fromTun := make(chan []byte)
 
 	go func() {
-		buffer := make([]byte, s.cfg.BufferSize)
+		buffer := make([]byte, s.cfg.TCPConfig.BufferSize)
 		for {
 			n, err := conn.Read(buffer)
 			if err != nil {
@@ -86,7 +142,7 @@ func (s *ServerTCP) handleConnection(ctx context.Context, conn net.Conn) {
 	}()
 
 	go func() {
-		buffer := make([]byte, s.cfg.BufferSize)
+		buffer := make([]byte, s.cfg.TCPConfig.BufferSize)
 		for {
 			n, err := s.tunDevice.Read(buffer)
 			if err != nil {

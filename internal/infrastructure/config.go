@@ -7,22 +7,46 @@ type (
 	}
 
 	Server struct {
-		Host       string    `mapstructure:"Host"`
-		Port       uint16    `mapstructure:"Port"`
-		DeviceTUN  DeviceTUN `mapstructure:"DeviceTUN"`
-		BufferSize uint16    `mapstructure:"BufferSize"`
+		TCPConfig TCPServer `mapstructure:"TCPConfig"`
+		DeviceTUN DeviceTUN `mapstructure:"DeviceTUN"`
 	}
 
 	Client struct {
-		ServerHost string    `mapstructure:"ServerHost"`
-		ServerPort uint16    `mapstructure:"ServerPort"`
-		DeviceTUN  DeviceTUN `mapstructure:"DeviceTUN"`
-		BufferSize uint16    `mapstructure:"BufferSize"`
+		TCPConfig TCPClient `mapstructure:"TCPConfig"`
+		DeviceTUN DeviceTUN `mapstructure:"DeviceTUN"`
 	}
 
 	DeviceTUN struct {
 		Host     string `mapstructure:"Host"`
 		Route    string `mapstructure:"Route"`
 		Platform string `mapstructure:"Platform"`
+	}
+
+	TCPServer struct {
+		Host       string              `mapstructure:"Host"`
+		Port       uint16              `mapstructure:"Port"`
+		BufferSize uint16              `mapstructure:"BufferSize"`
+		Encryption TCPServerEncryptoin `mapstructure:"Encryption"`
+	}
+
+	TCPServerEncryptoin struct {
+		Enabled    bool   `mapstructure:"Enabled"`
+		ServerCert string `mapstructure:"ServerCert"`
+		ServerKey  string `mapstructure:"ServerKey"`
+		CACert     string `mapstructure:"CACert"`
+	}
+
+	TCPClient struct {
+		ServerHost string              `mapstructure:"ServerHost"`
+		ServerPort uint16              `mapstructure:"ServerPort"`
+		BufferSize uint16              `mapstructure:"BufferSize"`
+		Encryption TCPClientEncryptoin `mapstructure:"Encryption"`
+	}
+
+	TCPClientEncryptoin struct {
+		Enabled    bool   `mapstructure:"Enabled"`
+		ClientCert string `mapstructure:"ClientCert"`
+		ClientKey  string `mapstructure:"ClientKey"`
+		CACert     string `mapstructure:"CACert"`
 	}
 )
