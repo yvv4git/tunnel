@@ -14,7 +14,8 @@ services:
     devices:
       - /dev/net/tun
     volumes:
-      - ./config.toml:/app/config.toml  
+      - ./config.toml:/app/config.toml
+      - ./certs/:/app/certs
     entrypoint: ./tunnel server
 
   client:
@@ -30,7 +31,8 @@ services:
     depends_on:
       - server
     volumes:
-      - ./config.toml:/app/config.toml  
+      - ./config.toml:/app/config.toml
+      - ./certs/:/app/certs
     entrypoint: ./tunnel client
 
 networks:

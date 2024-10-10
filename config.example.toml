@@ -1,19 +1,35 @@
 [Server]
-Host = "0.0.0.0"
-Port = 1234
-BufferSize = 1500 
 
-[Server.DeviceTUN]  
-Host = "10.0.0.1"
-Route = "10.0.0.0/24"
-Platform = "linux"
+  [Server.TCPConfig]
+  Host = "0.0.0.0"
+  Port = 1234
+  BufferSize = 1500
+
+    [Server.TCPConfig.Encryption]
+    Enabled = false
+    ServerCert = "./certs/server.crt"
+    ServerKey = "./certs/server.key"
+    CACert = "./certs/ca.crt"
+
+  [Server.DeviceTUN]
+  Host = "10.0.0.1"
+  Route = "10.0.0.0/24"
+  Platform = "linux"
 
 [Client]
-ServerHost = "server"
-ServerPort = 1234
-BufferSize = 1500  
 
-[Client.DeviceTUN]  
-Host = "10.0.0.2"
-Route = "10.0.0.0/24"
-Platform = "linux"
+  [Client.TCPConfig]
+  ServerHost = "server"
+  ServerPort = 1234
+  BufferSize = 1500
+
+    [Client.TCPConfig.Encryption]
+    Enabled = false
+    ClientCert = "./certs/client.crt"
+    ClientKey = "./certs/client.key"
+    CACert = "./certs/ca.crt"
+
+  [Client.DeviceTUN]
+  Host = "10.0.0.2"
+  Route = "10.0.0.0/24"
+  Platform = "linux"
