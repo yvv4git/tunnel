@@ -6,8 +6,8 @@ docker run -d \
   --hostname client \
   --cap-add NET_ADMIN \
   --device /dev/net/tun \
-  --link server \
   -v $(pwd)/config.toml:/app/config.toml \
-  -v $(pwd)/certs/:/app/certs \
-  yvv4git/tunnel-macos \
+  -v $(pwd)/configs/encryption/certs/:/app/certs \
+  --link server:server \
+  yvv4docker/tunnel-macos \
   ./tunnel client

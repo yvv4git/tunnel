@@ -8,6 +8,6 @@ docker run -d \
   --cap-add NET_ADMIN \
   --device /dev/net/tun \
   -v $(pwd)/config.toml:/app/config.toml \
-  -v $(pwd)/certs/:/app/certs \
-  yvv4git/tunnel-macos \
+  -v $(pwd)/configs/encryption/certs/:/app/certs \
+  yvv4docker/tunnel-macos \
   ./tunnel server
