@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   server:
-    image: yvv4git/tunnel-macos
+    image: yvv4docker/tunnel-macos
     container_name: server
     hostname: server
     networks:
@@ -15,11 +15,11 @@ services:
       - /dev/net/tun
     volumes:
       - ./config.toml:/app/config.toml
-      - ./certs/:/app/certs
+      - ./configs/encryption/certs/:/app/certs
     entrypoint: ./tunnel server
 
   client:
-    image: yvv4git/tunnel-macos
+    image: yvv4docker/tunnel-macos
     container_name: client
     hostname: client
     networks:
@@ -32,7 +32,7 @@ services:
       - server
     volumes:
       - ./config.toml:/app/config.toml
-      - ./certs/:/app/certs
+      - ./configs/encryption/certs/:/app/certs
     entrypoint: ./tunnel client
 
 networks:
