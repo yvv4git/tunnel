@@ -26,6 +26,7 @@ go.work.sum
 
 # Config
 config.toml
+config.server.toml
 
 # Certs
 certs
