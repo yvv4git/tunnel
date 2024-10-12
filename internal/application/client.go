@@ -45,7 +45,9 @@ func (c *Client) start(ctx context.Context) error {
 	defer clientTCP.Close()
 
 	svc := service.NewClient(clientTCP)
-	svc.Processing(ctx)
+	if err := svc.Processing(ctx); err != nil {
+		return fmt.Errorf("start client: %w", err)
+	}
 
 	return nil
 }
