@@ -7,15 +7,15 @@ import (
 )
 
 type Client struct {
-	clientTCP *infrastructure.ClientTCP
+	channelClient infrastructure.ChannelClient
 }
 
-func NewClient(clientTCP *infrastructure.ClientTCP) *Client {
+func NewClient(channelClient infrastructure.ChannelClient) *Client {
 	return &Client{
-		clientTCP: clientTCP,
+		channelClient: channelClient,
 	}
 }
 
 func (c *Client) Processing(ctx context.Context) error {
-	return c.clientTCP.Start(ctx)
+	return c.channelClient.Start(ctx)
 }

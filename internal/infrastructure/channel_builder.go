@@ -11,6 +11,11 @@ type ChannelServer interface {
 	Close() error
 }
 
+type ChannelClient interface {
+	Start(ctx context.Context) error
+	Close() error
+}
+
 type ChannelType string
 
 const (
@@ -42,7 +47,7 @@ func (b *ChannelBuilder) BuildServer(channelType ChannelType) (ChannelServer, er
 	}
 }
 
-func (b *ChannelBuilder) BuildClient(channelType ChannelType) (ChannelServer, error) {
+func (b *ChannelBuilder) BuildClient(channelType ChannelType) (ChannelClient, error) {
 	switch channelType {
 	case ChannelTCP:
 		return NewClientTCP(b.cfg.Client, b.tunDevice), nil
