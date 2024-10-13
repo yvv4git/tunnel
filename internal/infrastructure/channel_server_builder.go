@@ -28,7 +28,7 @@ func (b *ChanneServerBuilder) Build(channelType ChannelType) (ChannelServer, err
 	case ChannelTCP:
 		return NewServerTCP(b.cfg.Server, b.tunDevice), nil
 	case ChannelUDP:
-		return nil, nil // TODO: implement
+		return NewServerUDP(b.cfg.Server, b.tunDevice), nil
 	default:
 		return nil, ErrInvalidChannelType
 	}
