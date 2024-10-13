@@ -7,13 +7,15 @@ type (
 	}
 
 	Server struct {
-		TCPConfig TCPServer `mapstructure:"TCPConfig"`
-		DeviceTUN DeviceTUN `mapstructure:"DeviceTUN"`
+		ChannelType ChannelType `mapstructure:"ChannelType"`
+		TCPConfig   TCPServer   `mapstructure:"TCPConfig"`
+		DeviceTUN   DeviceTUN   `mapstructure:"DeviceTUN"`
 	}
 
 	Client struct {
-		TCPConfig TCPClient `mapstructure:"TCPConfig"`
-		DeviceTUN DeviceTUN `mapstructure:"DeviceTUN"`
+		ChannelType ChannelType `mapstructure:"ChannelType"`
+		TCPConfig   TCPClient   `mapstructure:"TCPConfig"`
+		DeviceTUN   DeviceTUN   `mapstructure:"DeviceTUN"`
 	}
 
 	DeviceTUN struct {

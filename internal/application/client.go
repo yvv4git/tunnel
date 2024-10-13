@@ -41,10 +41,14 @@ func (c *Client) start(ctx context.Context) error {
 	}
 	defer tunDevice.Close()
 
-	clientTCP := infrastructure.NewClientTCP(c.cfg.Client, tunDevice)
-	defer clientTCP.Close()
+	channelClientBuilder := infrastructure.NewChannelClientBuilder(c.cfg, tunDevice)
+	channelClient, err := channelClientBuilder.Build(c.cfg.Server.ChannelType)
+	if err != nil {
+		return fmt.Errorf("build client: %w", err)
+	}
+	defer channelClient.Close()
 
-	svc := service.NewClient(clientTCP)
+	svc := service.NewClient(channelClient)
 	if err := svc.Processing(ctx); err != nil {
 		return fmt.Errorf("start client: %w", err)
 	}
