@@ -7,15 +7,15 @@ import (
 )
 
 type Server struct {
-	serverTCP *infrastructure.ServerTCP
+	channelServer infrastructure.ChannelServer
 }
 
-func NewServer(serverTCP *infrastructure.ServerTCP) *Server {
+func NewServer(channelServer infrastructure.ChannelServer) *Server {
 	return &Server{
-		serverTCP: serverTCP,
+		channelServer: channelServer,
 	}
 }
 
 func (s *Server) Processing(ctx context.Context) error {
-	return s.serverTCP.Start(ctx)
+	return s.channelServer.Start(ctx)
 }
