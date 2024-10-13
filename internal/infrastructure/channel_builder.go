@@ -20,21 +20,32 @@ const (
 )
 
 type ChannelBuilder struct {
-	cfg       Server
+	cfg       Config
 	tunDevice *water.Interface
 }
 
-func NewChannelBuilder(cfg Server, tunDevice *water.Interface) *ChannelBuilder {
+func NewChannelBuilder(cfg Config, tunDevice *water.Interface) *ChannelBuilder {
 	return &ChannelBuilder{
 		cfg:       cfg,
 		tunDevice: tunDevice,
 	}
 }
 
-func (b *ChannelBuilder) Build(channelType ChannelType) (ChannelServer, error) {
+func (b *ChannelBuilder) BuildServer(channelType ChannelType) (ChannelServer, error) {
 	switch channelType {
 	case ChannelTCP:
-		return NewServerTCP(b.cfg, b.tunDevice), nil
+		return NewServerTCP(b.cfg.Server, b.tunDevice), nil
+	case ChannelUDP:
+		return nil, nil // TODO: implement
+	default:
+		return nil, ErrInvalidChannelType
+	}
+}
+
+func (b *ChannelBuilder) BuildClient(channelType ChannelType) (ChannelServer, error) {
+	switch channelType {
+	case ChannelTCP:
+		return NewClientTCP(b.cfg.Client, b.tunDevice), nil
 	case ChannelUDP:
 		return nil, nil // TODO: implement
 	default:
