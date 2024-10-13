@@ -18,6 +18,7 @@ ChannelType = "tcp"
   Platform = "linux"
 
 [Client]
+ChannelType = "tcp"
 
   [Client.TCPConfig]
   ServerHost = "server"
