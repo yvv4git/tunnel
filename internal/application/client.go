@@ -30,19 +30,19 @@ func (c *Client) start(ctx context.Context) error {
 	c.log.Info("Starting client application")
 	defer c.log.Info("Shutting down client application")
 
-	tunDeviceBuilder, err := infrastructure.NewDeviceTUNClientBuilder(c.cfg)
+	tunDeviceBuilder, err := infrastructure.NewDeviceTUNClientBuilder(c.cfg, c.log)
 	if err != nil {
 		return fmt.Errorf("create TUN device: %w", err)
 	}
 
-	tunDevice, err := tunDeviceBuilder.Build(infrastructure.Platform(c.cfg.Server.DeviceTUN.Platform))
+	tunDevice, err := tunDeviceBuilder.Build(infrastructure.Platform(c.cfg.Client.DeviceTUN.Platform))
 	if err != nil {
 		return fmt.Errorf("build TUN device: %w", err)
 	}
 	defer tunDevice.Close()
 
 	channelClientBuilder := infrastructure.NewChannelClientBuilder(c.cfg, tunDevice)
-	channelClient, err := channelClientBuilder.Build(c.cfg.Server.ChannelType)
+	channelClient, err := channelClientBuilder.Build(c.cfg.Client.ChannelType)
 	if err != nil {
 		return fmt.Errorf("build client: %w", err)
 	}

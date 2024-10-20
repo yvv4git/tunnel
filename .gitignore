@@ -25,8 +25,13 @@ go.work.sum
 .env
 
 # Config
-config.toml
-config.server.toml
+*.toml
 
 # Certs
 certs
+
+# Bin
+bin/
+
+# IDE
+.idea

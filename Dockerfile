@@ -10,7 +10,7 @@ RUN go build -o tunnel main.go
 # Step-2
 FROM debian:stable-slim
 
-RUN apt update && apt install -y iproute2 net-tools netcat-openbsd vim tcpdump
+RUN apt update && apt install -y iproute2 net-tools netcat-openbsd vim tcpdump iptables procps iputils-ping
 
 COPY --from=builder /app/tunnel /app/tunnel
 

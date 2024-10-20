@@ -8,7 +8,7 @@ import (
 	"github.com/songgao/water"
 )
 
-// ClientUPD - experimental
+// ClientUDP - experimental, not work now
 type ClientUDP struct {
 	cfg       Client
 	tunDevice *water.Interface
@@ -65,13 +65,11 @@ func (c *ClientUDP) tunToUDP(ctx context.Context) {
 		default:
 			n, err := c.tunDevice.Read(buffer)
 			if err != nil {
-				fmt.Printf("reading from tun device: %v\n", err)
 				continue
 			}
 
 			_, err = c.conn.Write(buffer[:n])
 			if err != nil {
-				fmt.Printf("writing to UDP connection: %v\n", err)
 				continue
 			}
 		}
@@ -88,13 +86,11 @@ func (c *ClientUDP) udpToTun(ctx context.Context) {
 		default:
 			n, _, err := c.conn.ReadFromUDP(buffer)
 			if err != nil {
-				fmt.Printf("reading from UDP connection: %v\n", err)
 				continue
 			}
 
 			_, err = c.tunDevice.Write(buffer[:n])
 			if err != nil {
-				fmt.Printf("writing to tun device: %v\n", err)
 				continue
 			}
 		}

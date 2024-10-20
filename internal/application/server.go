@@ -30,7 +30,7 @@ func (s *Server) start(ctx context.Context) error {
 	s.log.Info("Starting server application")
 	defer s.log.Info("Shutting down server application")
 
-	tunDeviceBuilder, err := infrastructure.NewDeviceTUNServerBuilder(s.cfg)
+	tunDeviceBuilder, err := infrastructure.NewDeviceTUNServerBuilder(s.cfg, s.log)
 	if err != nil {
 		return fmt.Errorf("create TUN device builder: %w", err)
 	}
@@ -51,7 +51,7 @@ func (s *Server) start(ctx context.Context) error {
 	defer channelServer.Close()
 
 	svc := service.NewServer(channelServer)
-	if err := svc.Processing(ctx); err != nil {
+	if err = svc.Processing(ctx); err != nil {
 		return fmt.Errorf("start server: %w", err)
 	}
 
