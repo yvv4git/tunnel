@@ -30,7 +30,7 @@ func (c *Client) start(ctx context.Context) error {
 	c.log.Info("Starting client application")
 	defer c.log.Info("Shutting down client application")
 
-	tunDeviceBuilder, err := infrastructure.NewDeviceTUNClientBuilder(c.cfg)
+	tunDeviceBuilder, err := infrastructure.NewDeviceTUNClientBuilder(c.cfg, c.log)
 	if err != nil {
 		return fmt.Errorf("create TUN device: %w", err)
 	}

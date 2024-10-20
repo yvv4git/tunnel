@@ -2,6 +2,7 @@ package infrastructure
 
 import (
 	"fmt"
+	"log/slog"
 	"os/exec"
 
 	"github.com/songgao/water"
@@ -9,19 +10,22 @@ import (
 
 type DeviceTUNServerBuilder struct {
 	cfg   Config
+	log   *slog.Logger
 	iface *water.Interface
 }
 
-func NewDeviceTUNServerBuilder(cfg Config) (*DeviceTUNServerBuilder, error) {
+func NewDeviceTUNServerBuilder(cfg Config, log *slog.Logger) (*DeviceTUNServerBuilder, error) {
 	iface, err := water.New(water.Config{
 		DeviceType: water.TUN,
 	})
 	if err != nil {
-		return nil, fmt.Errorf("create server TUN device: %w", err)
+		return nil, fmt.Errorf("create server tun device: %w", err)
 	}
+	log.Info("create tun device", iface.Name())
 
 	return &DeviceTUNServerBuilder{
 		cfg:   cfg,
+		log:   log,
 		iface: iface,
 	}, nil
 }
@@ -40,50 +44,54 @@ func (t *DeviceTUNServerBuilder) Build(platform Platform) (*water.Interface, err
 }
 
 func (t *DeviceTUNServerBuilder) configureServerForLinux() error {
+	t.log.Info("configure server for linux")
+
 	cfgServerTUN := t.cfg.Server.DeviceTUN
 	cfgClientTUN := t.cfg.Client.DeviceTUN
 
 	// Bring the interface up
 	cmd := exec.Command("sudo", "ip", "link", "set", "dev", t.iface.Name(), "up")
 	if err := cmd.Run(); err != nil {
-		return fmt.Errorf("bring up TUN device: %w", err)
+		return fmt.Errorf("bring up tun device: %w", err)
 	}
 
 	// Assign IP address to the interface
 	cmd = exec.Command("sudo", "ip", "addr", "add", cfgServerTUN.Host+"/32", "peer", cfgClientTUN.Host, "dev", t.iface.Name())
 	if err := cmd.Run(); err != nil {
-		return fmt.Errorf("assign IP address to TUN device: %w", err)
+		return fmt.Errorf("assign IP address to tun device: %w", err)
 	}
 
 	// Add route to the interface
 	cmd = exec.Command("sudo", "ip", "route", "add", cfgServerTUN.Route, "dev", t.iface.Name())
 	if err := cmd.Run(); err != nil {
-		return fmt.Errorf("add route to TUN device: %w", err)
+		return fmt.Errorf("add route to tun device: %w", err)
 	}
 
 	return nil
 }
 
 func (t *DeviceTUNServerBuilder) configureServerForMacOS() error {
-	cfgDeviceTUN := t.cfg.Server.DeviceTUN
+	t.log.Info("configure server for macos")
+
+	cfgServerTUN := t.cfg.Server.DeviceTUN
 	cfgClientTUN := t.cfg.Client.DeviceTUN
 
 	// Bring the interface up
 	cmd := exec.Command("sudo", "ifconfig", t.iface.Name(), "up")
 	if err := cmd.Run(); err != nil {
-		return fmt.Errorf("bring up TUN device: %w", err)
+		return fmt.Errorf("bring up tun device: %w", err)
 	}
 
 	// Assign IP address to the interface
-	cmd = exec.Command("sudo", "ifconfig", t.iface.Name(), cfgDeviceTUN.Host, cfgClientTUN.Host, "netmask", "255.255.255.255")
+	cmd = exec.Command("sudo", "ifconfig", t.iface.Name(), cfgServerTUN.Host, cfgClientTUN.Host, "netmask", "255.255.255.255")
 	if err := cmd.Run(); err != nil {
-		return fmt.Errorf("assign IP address to TUN device: %w", err)
+		return fmt.Errorf("assign IP address to tun device: %w", err)
 	}
 
 	// Add route to the interface
-	cmd = exec.Command("sudo", "route", "add", "-net", cfgDeviceTUN.Route, "-interface", t.iface.Name())
+	cmd = exec.Command("sudo", "route", "add", "-net", cfgServerTUN.Route, "-interface", t.iface.Name())
 	if err := cmd.Run(); err != nil {
-		return fmt.Errorf("add route to TUN device: %w", err)
+		return fmt.Errorf("add route to tun device: %w", err)
 	}
 
 	return nil
