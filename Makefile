@@ -24,5 +24,14 @@ gen_certs:
 compose_up:
 	docker compose up
 
+compose_up_only_server:
+	docker compose up --scale client=0
+
 compose_down:
 	docker compose down
+
+go_build_linux_x64:
+	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o bin/tunnel_linux main.go
+
+go_build_linux_386:
+	CGO_ENABLED=0 GOOS=linux GOARCH=386 go build -o bin/tunnel_linux_386 main.go
