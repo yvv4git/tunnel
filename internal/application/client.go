@@ -41,7 +41,7 @@ func (c *Client) start(ctx context.Context) error {
 	}
 	defer tunDevice.Close()
 
-	channelClientBuilder := infrastructure.NewChannelClientBuilder(c.cfg, tunDevice)
+	channelClientBuilder := infrastructure.NewChannelClientBuilder(c.log, c.cfg, tunDevice)
 	channelClient, err := channelClientBuilder.Build(c.cfg.Client.ChannelType)
 	if err != nil {
 		return fmt.Errorf("build client: %w", err)

@@ -7,19 +7,22 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
+	"log/slog"
 	"net"
 
 	"github.com/songgao/water"
 )
 
 type ClientTCP struct {
+	logger    *slog.Logger
 	cfg       Client
 	tunDevice *water.Interface
 	conn      net.Conn
 }
 
-func NewClientTCP(cfg Client, tunDevice *water.Interface) *ClientTCP {
+func NewClientTCP(logger *slog.Logger, cfg Client, tunDevice *water.Interface) *ClientTCP {
 	return &ClientTCP{
+		logger:    logger,
 		cfg:       cfg,
 		tunDevice: tunDevice,
 	}
@@ -95,13 +98,13 @@ func (c *ClientTCP) tunToTCP(ctx context.Context) {
 				if err == io.EOF {
 					return
 				}
-				fmt.Printf("reading from tun device: %v\n", err)
+				c.logger.Error("reading from tun device", slog.String("error", err.Error()))
 				continue
 			}
 
 			_, err = c.conn.Write(buffer[:n])
 			if err != nil {
-				fmt.Printf("writing to TCP connection: %v\n", err)
+				c.logger.Error("writing to TCP connection", slog.String("error", err.Error()))
 				continue
 			}
 		}
@@ -121,14 +124,13 @@ func (c *ClientTCP) tcpToTun(ctx context.Context) {
 				if err == io.EOF {
 					return
 				}
-				// TODO: Use logger
-				fmt.Printf("reading from TCP connection: %v\n", err)
+				c.logger.Error("reading from TCP connection", slog.String("error", err.Error()))
 				continue
 			}
 
 			_, err = c.tunDevice.Write(buffer[:n])
 			if err != nil {
-				fmt.Printf("writing to tun device: %v\n", err)
+				c.logger.Error("writing to tun device", slog.String("error", err.Error()))
 				continue
 			}
 		}
