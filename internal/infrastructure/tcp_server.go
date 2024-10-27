@@ -140,6 +140,7 @@ func (s *ServerTCP) handleConnection(ctx context.Context, conn net.Conn) {
 				return
 			}
 			fromConn <- buffer[:n]
+			bytesReceived.Add(float64(n))
 		}
 	}()
 
@@ -180,6 +181,7 @@ func (s *ServerTCP) handleConnection(ctx context.Context, conn net.Conn) {
 				s.logger.Error("writing to connection", slog.String("remote_addr", conn.RemoteAddr().String()), slog.String("error", err.Error()))
 				return
 			}
+			bytesSent.Add(float64(len(data)))
 		}
 	}
 }

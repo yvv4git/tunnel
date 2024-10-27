@@ -31,6 +31,7 @@ type (
 		Port       uint16              `mapstructure:"Port"`
 		BufferSize uint16              `mapstructure:"BufferSize"`
 		Encryption TCPServerEncryptoin `mapstructure:"Encryption"`
+		Metrics    MetricsWebServer    `mapstructure:"Metrics"`
 	}
 
 	TCPServerEncryptoin struct {
@@ -73,5 +74,10 @@ type (
 		ClientCert string `mapstructure:"ClientCert"`
 		ClientKey  string `mapstructure:"ClientKey"`
 		CACert     string `mapstructure:"CACert"`
+	}
+
+	MetricsWebServer struct {
+		Host string `mapstructure:"Host"`
+		Port uint16 `mapstructure:"Port"`
 	}
 )

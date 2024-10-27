@@ -50,6 +50,9 @@ func (s *Server) start(ctx context.Context) error {
 	}
 	defer channelServer.Close()
 
+	metricsWebServerCfg := s.cfg.Server.TCPConfig.Metrics
+	infrastructure.StartMetricsWebServer(metricsWebServerCfg)
+
 	svc := service.NewServer(channelServer)
 	if err = svc.Processing(ctx); err != nil {
 		return fmt.Errorf("start server: %w", err)
