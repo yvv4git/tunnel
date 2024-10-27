@@ -41,6 +41,7 @@ tcpdump -i tun0 -X -vvv 'src host 10.0.0.1 and dst host 10.0.0.2'
 tcpdump -i tun0 -X -vvv 'host 10.0.0.1 or host 10.0.0.2'
 tcpdump -i tun0 -X -vvv 'host 10.0.0.1 or host 10.0.0.2 or 34.160.111.145'
 tcpdump -i eth0 -X -vvv 'host 10.0.0.1 or host 10.0.0.2 or 34.160.111.145'
+tcpdump -i eth0 -X -vvv 'host 10.0.0.1 or host 10.0.0.2 or 142.251.31.198'
 ````
 
 
