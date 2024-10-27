@@ -3,7 +3,7 @@
 docker run -d \
   --name server \
   --hostname server \
-  -p 1234:1234 \
+  -p 443:443 \
   --cap-add NET_ADMIN \
   --device /dev/net/tun \
   -v $(pwd)/configs/config.server.toml:/app/configs/config.toml \

@@ -43,12 +43,15 @@ func (s *Server) start(ctx context.Context) error {
 	}
 	defer tunDevice.Close()
 
-	channelServerBuilder := infrastructure.NewChannelServerBuilder(s.cfg, tunDevice)
+	channelServerBuilder := infrastructure.NewChannelServerBuilder(s.log, s.cfg, tunDevice)
 	channelServer, err := channelServerBuilder.Build(s.cfg.Server.ChannelType)
 	if err != nil {
 		return fmt.Errorf("build server TCP: %w", err)
 	}
 	defer channelServer.Close()
+
+	metricsWebServerCfg := s.cfg.Server.TCPConfig.Metrics
+	infrastructure.StartMetricsWebServer(metricsWebServerCfg)
 
 	svc := service.NewServer(channelServer)
 	if err = svc.Processing(ctx); err != nil {

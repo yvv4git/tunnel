@@ -8,6 +8,9 @@ image_build_macos:
 run_server_macos:
 	docker run --rm --name tunnel-macos-server --cap-add=NET_ADMIN --device=/dev/net/tun:/dev/net/tun --entrypoint bash -it yvv4docker/tunnel-macos
 
+run_client_macos:
+	sudo go run main.go client -c configs/config.server.toml
+
 image_push_macos:
 	docker tag yvv4docker/tunnel-macos:latest docker.io/yvv4docker/tunnel-macos:v0.0.1
 	docker push docker.io/yvv4docker/tunnel-macos:v0.0.1

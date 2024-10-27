@@ -2,6 +2,7 @@ package infrastructure
 
 import (
 	"context"
+	"log/slog"
 
 	"github.com/songgao/water"
 )
@@ -11,22 +12,24 @@ type ChannelServer interface {
 	Close() error
 }
 
-type ChanneServerBuilder struct {
+type ChannelServerBuilder struct {
+	logger    *slog.Logger
 	cfg       Config
 	tunDevice *water.Interface
 }
 
-func NewChannelServerBuilder(cfg Config, tunDevice *water.Interface) *ChanneServerBuilder {
-	return &ChanneServerBuilder{
+func NewChannelServerBuilder(logger *slog.Logger, cfg Config, tunDevice *water.Interface) *ChannelServerBuilder {
+	return &ChannelServerBuilder{
+		logger:    logger,
 		cfg:       cfg,
 		tunDevice: tunDevice,
 	}
 }
 
-func (b *ChanneServerBuilder) Build(channelType ChannelType) (ChannelServer, error) {
+func (b *ChannelServerBuilder) Build(channelType ChannelType) (ChannelServer, error) {
 	switch channelType {
 	case ChannelTCP:
-		return NewServerTCP(b.cfg.Server, b.tunDevice), nil
+		return NewServerTCP(b.logger, b.cfg.Server, b.tunDevice), nil
 	case ChannelUDP:
 		return NewServerUDP(b.cfg.Server, b.tunDevice), nil
 	default:

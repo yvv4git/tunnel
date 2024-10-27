@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   server:
-    image: yvv4docker/tunnel-macos
+    image: yvv4docker/tunnel-macos:latest
     container_name: server
     hostname: server
     networks:
@@ -19,7 +19,7 @@ services:
     entrypoint: ./tunnel server --config ./configs/config.toml
 
   client:
-    image: yvv4docker/tunnel-macos
+    image: yvv4docker/tunnel-macos:latest
     container_name: client
     hostname: client
     networks:
@@ -34,6 +34,33 @@ services:
       - ./configs/config.toml:/app/configs/config.toml
       - ./configs/encryption/certs/:/app/configs/encryption/certs/
     entrypoint: ./tunnel client --config ./configs/config.toml
+
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./configs/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    networks:
+      - tun-network
+    depends_on:
+      - server
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    networks:
+      - tun-network
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=secret
+    volumes:
+      - ./configs/grafana/grafana-datasource.yaml:/etc/grafana/provisioning/datasources/datasource.yaml
+      - ./configs/grafana/grafana-dashboard.yaml:/etc/grafana/provisioning/dashboards/dashboard.yaml
+      - ./configs/grafana/dashboards:/var/lib/grafana/dashboards
+    depends_on:
+      - prometheus
 
 networks:
   tun-network:

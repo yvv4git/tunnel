@@ -26,6 +26,31 @@ nc 10.0.0.1 12346 < file.txt
 ```
 
 
+## Netcat - send file v2
+On server:
+````
+nc -v -s 10.0.0.1 -l -p 12346 | pv > testfile
+````
+I got speed 1000MiB 0:01:05 [15.3MiB/s] directly from client container to server container in docker network.
+
+On client:
+````
+nc 10.0.0.1 12346 < testfile
+````
+
+## Netcat - send file v3
+On server:
+````
+nc -v -s 192.168.2.2 -l -p 12346 | pv > testfile
+````
+I got speed 1000MiB 0:01:41 [9.88MiB/s] via tun & tcp+tls.
+
+On client:
+````
+ip route add 192.168.2.2 dev tun0
+nc 192.168.2.2 12346 < testfile
+````
+
 ## TCP-dump check
 Port 1234 is the port between the server and the client, i.e. the tunnel.
 ```
@@ -41,6 +66,7 @@ tcpdump -i tun0 -X -vvv 'src host 10.0.0.1 and dst host 10.0.0.2'
 tcpdump -i tun0 -X -vvv 'host 10.0.0.1 or host 10.0.0.2'
 tcpdump -i tun0 -X -vvv 'host 10.0.0.1 or host 10.0.0.2 or 34.160.111.145'
 tcpdump -i eth0 -X -vvv 'host 10.0.0.1 or host 10.0.0.2 or 34.160.111.145'
+tcpdump -i eth0 -X -vvv 'host 10.0.0.1 or host 10.0.0.2 or 142.251.31.198'
 ````
 
 
