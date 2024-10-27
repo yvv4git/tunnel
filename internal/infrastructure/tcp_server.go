@@ -7,19 +7,22 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"log/slog"
 	"net"
 
 	"github.com/songgao/water"
 )
 
 type ServerTCP struct {
+	logger    *slog.Logger
 	cfg       Server
 	tunDevice *water.Interface
 	listener  net.Listener
 }
 
-func NewServerTCP(cfg Server, tunDevice *water.Interface) *ServerTCP {
+func NewServerTCP(logger *slog.Logger, cfg Server, tunDevice *water.Interface) *ServerTCP {
 	return &ServerTCP{
+		logger:    logger,
 		cfg:       cfg,
 		tunDevice: tunDevice,
 	}
@@ -102,8 +105,7 @@ func (s *ServerTCP) Start(ctx context.Context) error {
 				return
 			}
 
-			// TODO: Use logger
-			fmt.Printf("Client connected: %s\n", conn.RemoteAddr().String())
+			s.logger.Info("client connected", slog.String("remote_addr", conn.RemoteAddr().String()))
 
 			connChan <- conn
 		}
@@ -133,7 +135,7 @@ func (s *ServerTCP) handleConnection(ctx context.Context, conn net.Conn) {
 		for {
 			n, err := conn.Read(buffer)
 			if err != nil {
-				fmt.Println("reading from connection:", err)
+				s.logger.Error("reading from connection", slog.String("remote_addr", conn.RemoteAddr().String()), slog.String("error", err.Error()))
 				close(fromConn)
 				return
 			}
@@ -146,7 +148,7 @@ func (s *ServerTCP) handleConnection(ctx context.Context, conn net.Conn) {
 		for {
 			n, err := s.tunDevice.Read(buffer)
 			if err != nil {
-				fmt.Println("reading from tun device:", err)
+				s.logger.Error("reading from tun device", slog.String("error", err.Error()))
 				close(fromTun)
 				return
 			}
@@ -165,7 +167,7 @@ func (s *ServerTCP) handleConnection(ctx context.Context, conn net.Conn) {
 
 			_, err := s.tunDevice.Write(data)
 			if err != nil {
-				fmt.Println("writing to tun device:", err)
+				s.logger.Error("writing to tun device", slog.String("error", err.Error()))
 				return
 			}
 		case data, ok := <-fromTun:
@@ -175,7 +177,7 @@ func (s *ServerTCP) handleConnection(ctx context.Context, conn net.Conn) {
 
 			_, err := conn.Write(data)
 			if err != nil {
-				fmt.Println("writing to connection:", err)
+				s.logger.Error("writing to connection", slog.String("remote_addr", conn.RemoteAddr().String()), slog.String("error", err.Error()))
 				return
 			}
 		}
