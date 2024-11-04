@@ -23,7 +23,7 @@ It reads the configuration from the specified file or default location and conne
 
 Example usage:
   app client
-  app client --config /path/to/config.toml
+  app client --config /path/to/config.yaml
 
 The client command will load the configuration and start the client, allowing it to interact with the server.`,
 	Run: func(cmd *cobra.Command, args []string) {

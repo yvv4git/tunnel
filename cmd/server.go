@@ -22,7 +22,7 @@ This command initializes and runs the server component of the application. It re
 
 Example usage:
   app server
-  app server --config /path/to/config.toml
+  app server --config /path/to/config.yaml
 
 The server command will load the configuration and start the server, making the application available for incoming requests.`,
 	Run: func(cmd *cobra.Command, args []string) {
