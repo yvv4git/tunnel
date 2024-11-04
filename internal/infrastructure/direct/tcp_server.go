@@ -1,4 +1,4 @@
-package infrastructure
+package direct
 
 import (
 	"context"
@@ -11,16 +11,18 @@ import (
 	"net"
 
 	"github.com/songgao/water"
+	"github.com/yvv4git/tunnel/internal/infrastructure/config"
+	"github.com/yvv4git/tunnel/internal/utils"
 )
 
 type ServerTCP struct {
 	logger    *slog.Logger
-	cfg       Server
+	cfg       config.Server
 	tunDevice *water.Interface
 	listener  net.Listener
 }
 
-func NewServerTCP(logger *slog.Logger, cfg Server, tunDevice *water.Interface) *ServerTCP {
+func NewServerTCP(logger *slog.Logger, cfg config.Server, tunDevice *water.Interface) *ServerTCP {
 	return &ServerTCP{
 		logger:    logger,
 		cfg:       cfg,
@@ -30,7 +32,7 @@ func NewServerTCP(logger *slog.Logger, cfg Server, tunDevice *water.Interface) *
 
 func (s *ServerTCP) setupListener() error {
 	serverCfg := s.cfg.TCPConfig
-	addr, err := createAddrString(serverCfg.Host, serverCfg.Port)
+	addr, err := utils.FormatAddrString(serverCfg.Host, serverCfg.Port)
 	if err != nil {
 		return fmt.Errorf("create server TCP address: %w", err)
 	}

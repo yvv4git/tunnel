@@ -1,14 +1,8 @@
-package infrastructure
+package utils
 
-import (
-	"fmt"
-)
+import "fmt"
 
-const (
-	tcpProtocol = "tcp"
-)
-
-func createAddrString(host string, port uint16) (string, error) {
+func FormatAddrString(host string, port uint16) (string, error) {
 	if host == "" {
 		return "", ErrInvalidHost
 	}

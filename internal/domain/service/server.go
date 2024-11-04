@@ -3,14 +3,14 @@ package service
 import (
 	"context"
 
-	"github.com/yvv4git/tunnel/internal/infrastructure"
+	"github.com/yvv4git/tunnel/internal/infrastructure/direct"
 )
 
 type Server struct {
-	channelServer infrastructure.ChannelServer
+	channelServer direct.ChannelServer
 }
 
-func NewServer(channelServer infrastructure.ChannelServer) *Server {
+func NewServer(channelServer direct.ChannelServer) *Server {
 	return &Server{
 		channelServer: channelServer,
 	}

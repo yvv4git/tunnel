@@ -1,4 +1,4 @@
-package infrastructure
+package direct
 
 import (
 	"fmt"
@@ -6,15 +6,16 @@ import (
 	"os/exec"
 
 	"github.com/songgao/water"
+	"github.com/yvv4git/tunnel/internal/infrastructure/config"
 )
 
 type DeviceTUNServerBuilder struct {
-	cfg   Config
+	cfg   config.Config
 	log   *slog.Logger
 	iface *water.Interface
 }
 
-func NewDeviceTUNServerBuilder(cfg Config, log *slog.Logger) (*DeviceTUNServerBuilder, error) {
+func NewDeviceTUNServerBuilder(cfg config.Config, log *slog.Logger) (*DeviceTUNServerBuilder, error) {
 	iface, err := water.New(water.Config{
 		DeviceType: water.TUN,
 	})
@@ -46,8 +47,8 @@ func (t *DeviceTUNServerBuilder) Build(platform Platform) (*water.Interface, err
 func (t *DeviceTUNServerBuilder) configureServerForLinux() error {
 	t.log.Info("configure server for linux")
 
-	cfgServerTUN := t.cfg.Server.DeviceTUN
-	cfgClientTUN := t.cfg.Client.DeviceTUN
+	cfgServerTUN := t.cfg.DirectConnection.Server.DeviceTUN
+	cfgClientTUN := t.cfg.DirectConnection.Client.DeviceTUN
 
 	// Bring the interface up
 	cmd := exec.Command("ip", "link", "set", "dev", t.iface.Name(), "up")
@@ -73,8 +74,8 @@ func (t *DeviceTUNServerBuilder) configureServerForLinux() error {
 func (t *DeviceTUNServerBuilder) configureServerForMacOS() error {
 	t.log.Info("configure server for macos")
 
-	cfgServerTUN := t.cfg.Server.DeviceTUN
-	cfgClientTUN := t.cfg.Client.DeviceTUN
+	cfgServerTUN := t.cfg.DirectConnection.Server.DeviceTUN
+	cfgClientTUN := t.cfg.DirectConnection.Client.DeviceTUN
 
 	// Bring the interface up
 	cmd := exec.Command("ifconfig", t.iface.Name(), "up")

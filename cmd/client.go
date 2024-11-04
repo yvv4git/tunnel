@@ -9,6 +9,8 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"github.com/yvv4git/tunnel/internal/application"
+	"github.com/yvv4git/tunnel/internal/infrastructure/config"
+
 	"github.com/yvv4git/tunnel/internal/infrastructure"
 )
 
@@ -23,13 +25,13 @@ It reads the configuration from the specified file or default location and conne
 
 Example usage:
   app client
-  app client --config /path/to/config.toml
+  app client --config /path/to/config.yaml
 
 The client command will load the configuration and start the client, allowing it to interact with the server.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		log := infrastructure.NewDefaultLogger()
 
-		var config infrastructure.Config
+		var config config.Config
 		if err := viper.Unmarshal(&config); err != nil {
 			log.Error("unmarshalling config", slog.Any("error", err))
 			return

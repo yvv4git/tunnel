@@ -1,7 +1,12 @@
-package infrastructure
+package config
 
 type (
 	Config struct {
+		DirectConnection DirectConnection `mapstructure:"DirectConnection"`
+		SpeedTest        SpeedTest        `mapstructure:"SpeedTest"`
+	}
+
+	DirectConnection struct {
 		Server Server `mapstructure:"Server"`
 		Client Client `mapstructure:"Client"`
 	}
@@ -9,14 +14,12 @@ type (
 	Server struct {
 		ChannelType ChannelType `mapstructure:"ChannelType"`
 		TCPConfig   TCPServer   `mapstructure:"TCPConfig"`
-		UDPConfig   UDPServer   `mapstructure:"UDPConfig"`
 		DeviceTUN   DeviceTUN   `mapstructure:"DeviceTUN"`
 	}
 
 	Client struct {
 		ChannelType ChannelType `mapstructure:"ChannelType"`
 		TCPConfig   TCPClient   `mapstructure:"TCPConfig"`
-		UDPConfig   UDPClient   `mapstructure:"UDPConfig"`
 		DeviceTUN   DeviceTUN   `mapstructure:"DeviceTUN"`
 	}
 
@@ -55,29 +58,28 @@ type (
 		CACert     string `mapstructure:"CACert"`
 	}
 
-	UDPServer struct {
+	MetricsWebServer struct {
+		Host string `mapstructure:"Host"`
+		Port uint16 `mapstructure:"Port"`
+	}
+
+	SpeedTest struct {
+		TCPServerSpeedTest TCPServerSpeedTest `mapstructure:"TCPServerSpeedTest"`
+		TCPClientSpeedTest TCPClientSpeedTest `mapstructure:"TCPClientSpeedTest"`
+	}
+
+	TCPServerSpeedTest struct {
 		Host       string              `mapstructure:"Host"`
 		Port       uint16              `mapstructure:"Port"`
 		BufferSize uint16              `mapstructure:"BufferSize"`
 		Encryption TCPServerEncryptoin `mapstructure:"Encryption"`
+		Metrics    MetricsWebServer    `mapstructure:"Metrics"`
 	}
 
-	UDPClient struct {
+	TCPClientSpeedTest struct {
 		ServerHost string              `mapstructure:"ServerHost"`
 		ServerPort uint16              `mapstructure:"ServerPort"`
 		BufferSize uint16              `mapstructure:"BufferSize"`
-		Encryption UDPClientEncryptoin `mapstructure:"Encryption"`
-	}
-
-	UDPClientEncryptoin struct {
-		Enabled    bool   `mapstructure:"Enabled"`
-		ClientCert string `mapstructure:"ClientCert"`
-		ClientKey  string `mapstructure:"ClientKey"`
-		CACert     string `mapstructure:"CACert"`
-	}
-
-	MetricsWebServer struct {
-		Host string `mapstructure:"Host"`
-		Port uint16 `mapstructure:"Port"`
+		Encryption TCPClientEncryptoin `mapstructure:"Encryption"`
 	}
 )
