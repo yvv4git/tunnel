@@ -12,6 +12,7 @@ import (
 
 	"github.com/songgao/water"
 	"github.com/yvv4git/tunnel/internal/infrastructure/config"
+	"github.com/yvv4git/tunnel/internal/utils"
 )
 
 type ClientTCP struct {
@@ -43,7 +44,7 @@ func (c *ClientTCP) Start(ctx context.Context) error {
 
 func (c *ClientTCP) setupConn() error {
 	clientCfg := c.cfg.TCPConfig
-	addr, err := createAddrString(clientCfg.ServerHost, clientCfg.ServerPort)
+	addr, err := utils.FormatAddrString(clientCfg.ServerHost, clientCfg.ServerPort)
 	if err != nil {
 		return fmt.Errorf("create client TCP address: %w", err)
 	}

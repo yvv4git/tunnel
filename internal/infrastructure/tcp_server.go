@@ -12,6 +12,7 @@ import (
 
 	"github.com/songgao/water"
 	"github.com/yvv4git/tunnel/internal/infrastructure/config"
+	"github.com/yvv4git/tunnel/internal/utils"
 )
 
 type ServerTCP struct {
@@ -31,7 +32,7 @@ func NewServerTCP(logger *slog.Logger, cfg config.Server, tunDevice *water.Inter
 
 func (s *ServerTCP) setupListener() error {
 	serverCfg := s.cfg.TCPConfig
-	addr, err := createAddrString(serverCfg.Host, serverCfg.Port)
+	addr, err := utils.FormatAddrString(serverCfg.Host, serverCfg.Port)
 	if err != nil {
 		return fmt.Errorf("create server TCP address: %w", err)
 	}
