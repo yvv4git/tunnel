@@ -31,8 +31,6 @@ func (b *ChannelServerBuilder) Build(channelType config.ChannelType) (ChannelSer
 	switch channelType {
 	case config.ChannelTCP:
 		return NewServerTCP(b.logger, b.cfg.DirectConnection.Server, b.tunDevice), nil
-	case config.ChannelUDP:
-		return NewServerUDP(b.cfg.DirectConnection.Server, b.tunDevice), nil
 	default:
 		return nil, ErrInvalidChannelType
 	}
