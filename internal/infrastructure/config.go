@@ -2,6 +2,11 @@ package infrastructure
 
 type (
 	Config struct {
+		DirectConnection DirectConnection `mapstructure:"DirectConnection"`
+		SpeedTest        SpeedTest        `mapstructure:"SpeedTest"`
+	}
+
+	DirectConnection struct {
 		Server Server `mapstructure:"Server"`
 		Client Client `mapstructure:"Client"`
 	}
@@ -79,5 +84,24 @@ type (
 	MetricsWebServer struct {
 		Host string `mapstructure:"Host"`
 		Port uint16 `mapstructure:"Port"`
+	}
+
+	SpeedTest struct {
+		TCPServerSpeedTest TCPServerSpeedTest `mapstructure:"TCPServerSpeedTest"`
+		TCPClientSpeedTest TCPClientSpeedTest `mapstructure:"TCPClientSpeedTest"`
+	}
+
+	TCPServerSpeedTest struct {
+		Host       string              `mapstructure:"Host"`
+		Port       uint16              `mapstructure:"Port"`
+		BufferSize uint16              `mapstructure:"BufferSize"`
+		Encryption TCPServerEncryptoin `mapstructure:"Encryption"`
+	}
+
+	TCPClientSpeedTest struct {
+		ServerHost string              `mapstructure:"ServerHost"`
+		ServerPort uint16              `mapstructure:"ServerPort"`
+		BufferSize uint16              `mapstructure:"BufferSize"`
+		Encryption TCPClientEncryptoin `mapstructure:"Encryption"`
 	}
 )

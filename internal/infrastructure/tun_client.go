@@ -50,8 +50,8 @@ func (t *DeviceTUNClientBuilder) Build(platform Platform) (*water.Interface, err
 func (t *DeviceTUNClientBuilder) configureClientForLinux() error {
 	t.log.Info("configuring Linux client")
 
-	cfgServerTUN := t.cfg.Server.DeviceTUN
-	cfgClientTUN := t.cfg.Client.DeviceTUN
+	cfgServerTUN := t.cfg.DirectConnection.Server.DeviceTUN
+	cfgClientTUN := t.cfg.DirectConnection.Client.DeviceTUN
 
 	cmd := exec.Command("ip", "link", "set", "dev", t.iface.Name(), "up")
 	if err := cmd.Run(); err != nil {
@@ -74,8 +74,8 @@ func (t *DeviceTUNClientBuilder) configureClientForLinux() error {
 func (t *DeviceTUNClientBuilder) configureClientForMacOS() error {
 	t.log.Info("configuring mac client")
 
-	cfgDeviceTUN := t.cfg.Client.DeviceTUN
-	cfgServerTUN := t.cfg.Server.DeviceTUN
+	cfgDeviceTUN := t.cfg.DirectConnection.Client.DeviceTUN
+	cfgServerTUN := t.cfg.DirectConnection.Server.DeviceTUN
 
 	// Assign IP address to the interface and bring it up
 	cmd := exec.Command("ifconfig", t.iface.Name(), cfgDeviceTUN.Host, cfgServerTUN.Host, "up")

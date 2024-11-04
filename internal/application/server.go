@@ -35,7 +35,7 @@ func (s *Server) start(ctx context.Context) error {
 		return fmt.Errorf("create TUN device builder: %w", err)
 	}
 
-	tunDeviceCfg := s.cfg.Server.DeviceTUN
+	tunDeviceCfg := s.cfg.DirectConnection.Server.DeviceTUN
 	currentPlatform := infrastructure.Platform(tunDeviceCfg.Platform)
 	tunDevice, err := tunDeviceBuilder.Build(currentPlatform)
 	if err != nil {
@@ -44,13 +44,13 @@ func (s *Server) start(ctx context.Context) error {
 	defer tunDevice.Close()
 
 	channelServerBuilder := infrastructure.NewChannelServerBuilder(s.log, s.cfg, tunDevice)
-	channelServer, err := channelServerBuilder.Build(s.cfg.Server.ChannelType)
+	channelServer, err := channelServerBuilder.Build(s.cfg.DirectConnection.Server.ChannelType)
 	if err != nil {
 		return fmt.Errorf("build server TCP: %w", err)
 	}
 	defer channelServer.Close()
 
-	metricsWebServerCfg := s.cfg.Server.TCPConfig.Metrics
+	metricsWebServerCfg := s.cfg.DirectConnection.Server.TCPConfig.Metrics
 	infrastructure.StartMetricsWebServer(metricsWebServerCfg)
 
 	svc := service.NewServer(channelServer)

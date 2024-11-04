@@ -29,9 +29,9 @@ func NewChannelClientBuilder(logger *slog.Logger, cfg Config, tunDevice *water.I
 func (b *ChannelClientBuilder) Build(channelType ChannelType) (ChannelClient, error) {
 	switch channelType {
 	case ChannelTCP:
-		return NewClientTCP(b.logger, b.cfg.Client, b.tunDevice), nil
+		return NewClientTCP(b.logger, b.cfg.DirectConnection.Client, b.tunDevice), nil
 	case ChannelUDP:
-		return NewClientUDP(b.cfg.Client, b.tunDevice), nil
+		return NewClientUDP(b.cfg.DirectConnection.Client, b.tunDevice), nil
 	default:
 		return nil, ErrInvalidChannelType
 	}

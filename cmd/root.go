@@ -42,7 +42,7 @@ This command does not perform any additional actions beyond loading the configur
 
 func init() {
 	cobra.OnInitialize(initConfig)
-	rootCmd.PersistentFlags().StringP("config", "c", "./configs/config.toml", "Path to the config file")
+	rootCmd.PersistentFlags().StringP("config", "c", "./configs/config.yaml", "Path to the config file")
 	if err := viper.BindPFlag("config", rootCmd.PersistentFlags().Lookup("config")); err != nil {
 		log.Fatalf("Error binding config flag: %s", err.Error())
 	}
@@ -54,7 +54,7 @@ func initConfig() {
 		viper.SetConfigFile(configFile)
 	} else {
 		viper.SetConfigName("config")
-		viper.SetConfigType("toml")
+		viper.SetConfigType("yaml")
 		viper.AddConfigPath(".")
 	}
 
