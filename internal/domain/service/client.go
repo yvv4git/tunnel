@@ -3,14 +3,14 @@ package service
 import (
 	"context"
 
-	"github.com/yvv4git/tunnel/internal/infrastructure"
+	"github.com/yvv4git/tunnel/internal/infrastructure/direct"
 )
 
 type Client struct {
-	channelClient infrastructure.ChannelClient
+	channelClient direct.ChannelClient
 }
 
-func NewClient(channelClient infrastructure.ChannelClient) *Client {
+func NewClient(channelClient direct.ChannelClient) *Client {
 	return &Client{
 		channelClient: channelClient,
 	}

@@ -6,8 +6,8 @@ import (
 	"log/slog"
 
 	"github.com/yvv4git/tunnel/internal/domain/service"
-	"github.com/yvv4git/tunnel/internal/infrastructure"
 	"github.com/yvv4git/tunnel/internal/infrastructure/config"
+	"github.com/yvv4git/tunnel/internal/infrastructure/direct"
 )
 
 type Server struct {
@@ -31,20 +31,20 @@ func (s *Server) start(ctx context.Context) error {
 	s.log.Info("Starting server application")
 	defer s.log.Info("Shutting down server application")
 
-	tunDeviceBuilder, err := infrastructure.NewDeviceTUNServerBuilder(s.cfg, s.log)
+	tunDeviceBuilder, err := direct.NewDeviceTUNServerBuilder(s.cfg, s.log)
 	if err != nil {
 		return fmt.Errorf("create TUN device builder: %w", err)
 	}
 
 	tunDeviceCfg := s.cfg.DirectConnection.Server.DeviceTUN
-	currentPlatform := infrastructure.Platform(tunDeviceCfg.Platform)
+	currentPlatform := direct.Platform(tunDeviceCfg.Platform)
 	tunDevice, err := tunDeviceBuilder.Build(currentPlatform)
 	if err != nil {
 		return fmt.Errorf("build TUN device: %w", err)
 	}
 	defer tunDevice.Close()
 
-	channelServerBuilder := infrastructure.NewChannelServerBuilder(s.log, s.cfg, tunDevice)
+	channelServerBuilder := direct.NewChannelServerBuilder(s.log, s.cfg, tunDevice)
 	channelServer, err := channelServerBuilder.Build(s.cfg.DirectConnection.Server.ChannelType)
 	if err != nil {
 		return fmt.Errorf("build server TCP: %w", err)
@@ -52,7 +52,7 @@ func (s *Server) start(ctx context.Context) error {
 	defer channelServer.Close()
 
 	metricsWebServerCfg := s.cfg.DirectConnection.Server.TCPConfig.Metrics
-	infrastructure.StartMetricsWebServer(metricsWebServerCfg)
+	direct.StartMetricsWebServer(metricsWebServerCfg)
 
 	svc := service.NewServer(channelServer)
 	if err = svc.Processing(ctx); err != nil {

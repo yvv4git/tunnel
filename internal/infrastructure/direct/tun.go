@@ -1,4 +1,4 @@
-package infrastructure
+package direct
 
 type Platform string
 
