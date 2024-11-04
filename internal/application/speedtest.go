@@ -41,6 +41,9 @@ func (s *Speedtest) start(ctx context.Context) error {
 }
 
 func (s *Speedtest) startServer(ctx context.Context) error {
+	metricsWebServerCfg := s.cfg.DirectConnection.Server.TCPConfig.Metrics
+	speedtest.StartMetricsWebServer(metricsWebServerCfg)
+
 	serverTCP := speedtest.NewServerTCP(s.log, s.cfg.SpeedTest.TCPServerSpeedTest)
 	svc := service.NewSpeedtestServer(serverTCP)
 

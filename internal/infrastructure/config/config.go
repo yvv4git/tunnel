@@ -73,6 +73,7 @@ type (
 		Port       uint16              `mapstructure:"Port"`
 		BufferSize uint16              `mapstructure:"BufferSize"`
 		Encryption TCPServerEncryptoin `mapstructure:"Encryption"`
+		Metrics    MetricsWebServer    `mapstructure:"Metrics"`
 	}
 
 	TCPClientSpeedTest struct {

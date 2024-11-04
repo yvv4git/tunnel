@@ -16,7 +16,7 @@ services:
     volumes:
       - ./configs/config.compose.yaml:/app/configs/config.yaml
       - ./configs/encryption/certs/:/app/configs/encryption/certs/
-    entrypoint: ./tunnel server --config ./configs/config.yaml
+    entrypoint: ./tunnel speedtest server --config ./configs/config.yaml
 
   client:
     image: yvv4docker/tunnel-macos:latest
@@ -33,7 +33,7 @@ services:
     volumes:
       - ./configs/config.compose.yaml:/app/configs/config.yaml
       - ./configs/encryption/certs/:/app/configs/encryption/certs/
-    entrypoint: ./tunnel client --config ./configs/config.yaml
+    entrypoint: ./tunnel speedtest client --config ./configs/config.yaml
 
   prometheus:
     image: prom/prometheus:latest

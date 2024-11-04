@@ -71,11 +71,12 @@ func (s *ServerTCP) handleConnection(ctx context.Context, conn net.Conn) {
 			return
 		default:
 			// Read data from client
-			_, err := conn.Read(buf)
+			n, err := conn.Read(buf)
 			if err != nil {
 				s.logger.Error("read from connection", "error", err)
 				return
 			}
+			bytesReceived.Add(float64(n)) // Increment bytes received counter
 
 			// Generate random data
 			_, err = rand.Read(randomData)
@@ -85,11 +86,12 @@ func (s *ServerTCP) handleConnection(ctx context.Context, conn net.Conn) {
 			}
 
 			// Send random data to client
-			_, err = conn.Write(randomData)
+			n, err = conn.Write(randomData)
 			if err != nil {
 				s.logger.Error("write to connection", "error", err)
 				return
 			}
+			bytesSent.Add(float64(n)) // Increment bytes sent counter
 		}
 	}
 }
