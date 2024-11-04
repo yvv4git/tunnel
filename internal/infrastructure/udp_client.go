@@ -6,16 +6,17 @@ import (
 	"net"
 
 	"github.com/songgao/water"
+	"github.com/yvv4git/tunnel/internal/infrastructure/config"
 )
 
 // ClientUDP - experimental, not work now
 type ClientUDP struct {
-	cfg       Client
+	cfg       config.Client
 	tunDevice *water.Interface
 	conn      *net.UDPConn
 }
 
-func NewClientUDP(cfg Client, tunDevice *water.Interface) *ClientUDP {
+func NewClientUDP(cfg config.Client, tunDevice *water.Interface) *ClientUDP {
 	return &ClientUDP{
 		cfg:       cfg,
 		tunDevice: tunDevice,

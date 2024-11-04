@@ -9,6 +9,8 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"github.com/yvv4git/tunnel/internal/application"
+	"github.com/yvv4git/tunnel/internal/infrastructure/config"
+
 	"github.com/yvv4git/tunnel/internal/infrastructure"
 )
 
@@ -29,7 +31,7 @@ The client command will load the configuration and start the client, allowing it
 	Run: func(cmd *cobra.Command, args []string) {
 		log := infrastructure.NewDefaultLogger()
 
-		var config infrastructure.Config
+		var config config.Config
 		if err := viper.Unmarshal(&config); err != nil {
 			log.Error("unmarshalling config", slog.Any("error", err))
 			return

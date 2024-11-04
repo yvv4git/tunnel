@@ -11,16 +11,17 @@ import (
 	"net"
 
 	"github.com/songgao/water"
+	"github.com/yvv4git/tunnel/internal/infrastructure/config"
 )
 
 type ServerTCP struct {
 	logger    *slog.Logger
-	cfg       Server
+	cfg       config.Server
 	tunDevice *water.Interface
 	listener  net.Listener
 }
 
-func NewServerTCP(logger *slog.Logger, cfg Server, tunDevice *water.Interface) *ServerTCP {
+func NewServerTCP(logger *slog.Logger, cfg config.Server, tunDevice *water.Interface) *ServerTCP {
 	return &ServerTCP{
 		logger:    logger,
 		cfg:       cfg,

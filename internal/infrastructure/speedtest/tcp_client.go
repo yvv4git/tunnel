@@ -7,16 +7,16 @@ import (
 	"log/slog"
 	"net"
 
-	"github.com/yvv4git/tunnel/internal/infrastructure"
+	"github.com/yvv4git/tunnel/internal/infrastructure/config"
 	"github.com/yvv4git/tunnel/internal/utils"
 )
 
 type ClientTCP struct {
 	logger *slog.Logger
-	cfg    infrastructure.TCPClientSpeedTest
+	cfg    config.TCPClientSpeedTest
 }
 
-func NewClientTCP(logger *slog.Logger, cfg infrastructure.TCPClientSpeedTest) *ClientTCP {
+func NewClientTCP(logger *slog.Logger, cfg config.TCPClientSpeedTest) *ClientTCP {
 	return &ClientTCP{
 		logger: logger,
 		cfg:    cfg,

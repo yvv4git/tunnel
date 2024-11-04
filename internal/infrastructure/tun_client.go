@@ -6,15 +6,16 @@ import (
 	"os/exec"
 
 	"github.com/songgao/water"
+	"github.com/yvv4git/tunnel/internal/infrastructure/config"
 )
 
 type DeviceTUNClientBuilder struct {
-	cfg   Config
+	cfg   config.Config
 	log   *slog.Logger
 	iface *water.Interface
 }
 
-func NewDeviceTUNClientBuilder(cfg Config, log *slog.Logger) (*DeviceTUNClientBuilder, error) {
+func NewDeviceTUNClientBuilder(cfg config.Config, log *slog.Logger) (*DeviceTUNClientBuilder, error) {
 	iface, err := water.New(water.Config{
 		DeviceType: water.TUN,
 	})

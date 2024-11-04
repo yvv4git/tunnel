@@ -13,6 +13,7 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"github.com/yvv4git/tunnel/internal/infrastructure"
+	"github.com/yvv4git/tunnel/internal/infrastructure/config"
 )
 
 // rootCmd represents the root command
@@ -30,7 +31,7 @@ This command does not perform any additional actions beyond loading the configur
 	Run: func(cmd *cobra.Command, args []string) {
 		log := infrastructure.NewDefaultLogger()
 
-		var config infrastructure.Config
+		var config config.Config
 		if err := viper.Unmarshal(&config); err != nil {
 			log.Error("unmarshalling config", slog.Any("error", err))
 			return

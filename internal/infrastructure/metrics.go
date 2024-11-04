@@ -7,6 +7,7 @@ import (
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
+	"github.com/yvv4git/tunnel/internal/infrastructure/config"
 )
 
 var (
@@ -21,7 +22,7 @@ var (
 	})
 )
 
-func StartMetricsWebServer(cfg MetricsWebServer) {
+func StartMetricsWebServer(cfg config.MetricsWebServer) {
 	http.Handle("/metrics", promhttp.Handler())
 
 	go func() {

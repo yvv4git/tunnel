@@ -5,6 +5,7 @@ import (
 	"log/slog"
 
 	"github.com/songgao/water"
+	"github.com/yvv4git/tunnel/internal/infrastructure/config"
 )
 
 type ChannelClient interface {
@@ -14,11 +15,11 @@ type ChannelClient interface {
 
 type ChannelClientBuilder struct {
 	logger    *slog.Logger
-	cfg       Config
+	cfg       config.Config
 	tunDevice *water.Interface
 }
 
-func NewChannelClientBuilder(logger *slog.Logger, cfg Config, tunDevice *water.Interface) *ChannelClientBuilder {
+func NewChannelClientBuilder(logger *slog.Logger, cfg config.Config, tunDevice *water.Interface) *ChannelClientBuilder {
 	return &ChannelClientBuilder{
 		logger:    logger,
 		cfg:       cfg,
@@ -26,11 +27,11 @@ func NewChannelClientBuilder(logger *slog.Logger, cfg Config, tunDevice *water.I
 	}
 }
 
-func (b *ChannelClientBuilder) Build(channelType ChannelType) (ChannelClient, error) {
+func (b *ChannelClientBuilder) Build(channelType config.ChannelType) (ChannelClient, error) {
 	switch channelType {
-	case ChannelTCP:
+	case config.ChannelTCP:
 		return NewClientTCP(b.logger, b.cfg.DirectConnection.Client, b.tunDevice), nil
-	case ChannelUDP:
+	case config.ChannelUDP:
 		return NewClientUDP(b.cfg.DirectConnection.Client, b.tunDevice), nil
 	default:
 		return nil, ErrInvalidChannelType

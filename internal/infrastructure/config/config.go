@@ -1,4 +1,4 @@
-package infrastructure
+package config
 
 type (
 	Config struct {

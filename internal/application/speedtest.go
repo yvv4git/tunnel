@@ -6,17 +6,17 @@ import (
 	"log/slog"
 
 	"github.com/yvv4git/tunnel/internal/domain/service"
-	"github.com/yvv4git/tunnel/internal/infrastructure"
+	"github.com/yvv4git/tunnel/internal/infrastructure/config"
 	"github.com/yvv4git/tunnel/internal/infrastructure/speedtest"
 )
 
 type Speedtest struct {
 	application
-	cfg     infrastructure.Config
+	cfg     config.Config
 	appType string
 }
 
-func NewSpeedtest(log *slog.Logger, cfg infrastructure.Config, appType string) *Speedtest {
+func NewSpeedtest(log *slog.Logger, cfg config.Config, appType string) *Speedtest {
 	s := &Speedtest{
 		application: application{
 			log: log,

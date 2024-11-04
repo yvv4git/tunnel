@@ -10,6 +10,7 @@ import (
 	"github.com/spf13/viper"
 	"github.com/yvv4git/tunnel/internal/application"
 	"github.com/yvv4git/tunnel/internal/infrastructure"
+	"github.com/yvv4git/tunnel/internal/infrastructure/config"
 )
 
 // speedtestCmd represents the speedtest command
@@ -34,7 +35,7 @@ This will initiate the speed test and display the results in the terminal.`,
 			return
 		}
 
-		var config infrastructure.Config
+		var config config.Config
 		if err := viper.Unmarshal(&config); err != nil {
 			log.Error("unmarshalling config", slog.Any("error", err))
 			return

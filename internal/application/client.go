@@ -7,14 +7,15 @@ import (
 
 	"github.com/yvv4git/tunnel/internal/domain/service"
 	"github.com/yvv4git/tunnel/internal/infrastructure"
+	"github.com/yvv4git/tunnel/internal/infrastructure/config"
 )
 
 type Client struct {
 	application
-	cfg infrastructure.Config
+	cfg config.Config
 }
 
-func NewClient(log *slog.Logger, cfg infrastructure.Config) *Client {
+func NewClient(log *slog.Logger, cfg config.Config) *Client {
 	c := &Client{
 		application: application{
 			log: log,
