@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  server:
+    image: yvv4docker/tunnel-macos:latest
+    container_name: server
+    hostname: server
+    networks:
+      - tun-network
+    ports:
+      - "2223:443"
+      - "8080:8080"
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun
+    volumes:
+      - ./configs/config.reverse.yaml:/app/configs/config.yaml
+      - ./configs/encryption/certs/:/app/configs/encryption/certs/
+    entrypoint: ./tunnel server --config ./configs/config.yaml
+
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./configs/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    networks:
+      - tun-network
+    depends_on:
+      - server
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    networks:
+      - tun-network
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=secret
+    volumes:
+      - ./configs/grafana/grafana-datasource.yaml:/etc/grafana/provisioning/datasources/datasource.yaml
+      - ./configs/grafana/grafana-dashboard.yaml:/etc/grafana/provisioning/dashboards/dashboard.yaml
+      - ./configs/grafana/dashboards:/var/lib/grafana/dashboards
+    depends_on:
+      - prometheus
+
+networks:
+  tun-network:
+    driver: bridge

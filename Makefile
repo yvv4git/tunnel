@@ -12,12 +12,12 @@ run_client_macos:
 	sudo go run main.go client -c configs/config.server.toml
 
 image_push_macos:
-	docker tag yvv4docker/tunnel-macos:latest docker.io/yvv4docker/tunnel-macos:v0.0.1
-	docker push docker.io/yvv4docker/tunnel-macos:v0.0.1
+	docker tag yvv4docker/tunnel-macos:latest docker.io/yvv4docker/tunnel-macos:v0.0.2
+	docker push docker.io/yvv4docker/tunnel-macos:v0.0.2
 
 image_push_linux:
-	docker tag yvv4docker/tunnel-linux:latest docker.io/yvv4docker/tunnel-linux:v0.0.1
-	docker push docker.io/yvv4docker/tunnel-linux:v0.0.1
+	docker tag yvv4docker/tunnel-linux:latest docker.io/yvv4docker/tunnel-linux:v0.0.2
+	docker push docker.io/yvv4docker/tunnel-linux:v0.0.2
 
 
 gen_certs:
@@ -28,7 +28,7 @@ compose_up:
 	docker compose up
 
 compose_up_only_server:
-	docker compose up --scale client=0
+	docker compose -f docker-compose.server-local.yml up
 
 compose_down:
 	docker compose down

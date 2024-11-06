@@ -1,0 +1,57 @@
+DirectConnection:
+  Server:
+    ChannelType: "tcp"
+    TCPConfig:
+      Host: "0.0.0.0"
+      Port: 443
+      BufferSize: 1500
+      Encryption:
+        Enabled: true
+        ServerCert: "./configs/encryption/certs/server.crt"
+        ServerKey: "./configs/encryption/certs/server.key"
+        CACert: "./configs/encryption/certs/ca.crt"
+      Metrics:
+          Host: "0.0.0.0"
+          Port: 8080
+    DeviceTUN:
+      Host: "10.0.0.1"
+      Route: "10.0.0.0/24"
+      Platform: "linux"
+  Client:
+    ChannelType: "tcp"
+    TCPConfig:
+      ServerHost: "194.81.12.123"
+      ServerPort: 443
+      BufferSize: 1500
+      Encryption:
+        Enabled: true
+        ClientCert: "./configs/encryption/certs/client.crt"
+        ClientKey: "./configs/encryption/certs/client.key"
+        CACert: "./configs/encryption/certs/ca.crt"
+    DeviceTUN:
+      Host: "10.0.0.2"
+      Route: "10.0.0.0/24"
+      Platform: "linux"
+
+SpeedTest:
+  TCPServerSpeedTest:
+    Host: "0.0.0.0"
+    Port: 443
+    BufferSize: 1500
+    Encryption:
+      Enabled: true
+      ServerCert: "./configs/encryption/certs/server.crt"
+      ServerKey: "./configs/encryption/certs/server.key"
+      CACert: "/path/to/ca.crt"
+    Metrics:
+        Host: "0.0.0.0"
+        Port: 8080
+  TCPClientSpeedTest:
+    ServerHost: "194.81.12.123"
+    ServerPort: 443
+    BufferSize: 1500
+    Encryption:
+      Enabled: true
+      ClientCert: "./configs/encryption/certs/client.crt"
+      ClientKey: "./configs/encryption/certs/client.key"
+      CACert: "./configs/encryption/certs/ca.crt"
