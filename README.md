@@ -107,3 +107,17 @@ sudo go run main.go client --config ./configs/config.server.toml
 
 ## Schema
 ![Schema](public/tunnel_schema.png)
+
+
+## Speed test with iperf3
+On server:
+```
+iperf3 -4 -s 10.0.0.1 --port 5201
+```
+
+On client:
+```
+iperf3 -c 10.0.0.1
+```
+
+![IPerf3](public/iperf3.png)
